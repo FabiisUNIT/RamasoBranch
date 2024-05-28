@@ -1,3 +1,10 @@
+#include <Servo.h>  //Control Servos
+ //Pines para la Rampa Móvil, conexión con Arduino Mega y Servo(2) Librería Servo.h
+    #define pinServo_Rampa 5
+
+//Objetos Servomotores
+Servo ServoRampa;
+
 const int Selector_Monedas_Pin = 2;//pin al cual estara conectada la señal del monedero
 
 int Lectura_Pin_Moneda;
@@ -29,9 +36,17 @@ void setup() {
 
   //Asignamos el pin para el led como salida
   pinMode(Led_Boton, OUTPUT);
-   pinMode(Boton2, INPUT);
-   pinMode(Boton, INPUT);
-  
+  pinMode(Boton2, INPUT);
+  pinMode(Boton, INPUT);
+
+  //pinMode(pinServo_Lineal, OUTPUT);
+  pinMode(pinServo_Rampa, OUTPUT);
+
+    //Al inicio del codigo los motores inician inactivos
+  //ServoLineal.attach(pinServo_Lineal);
+  ServoRampa.attach(pinServo_Rampa);
+    //Al inicio del codigo los servomotores empiezane en cero
+  ServoRampa.write(0);
 }
 
 void loop() {
@@ -42,6 +57,7 @@ void loop() {
     {
       enciendeBoton();
       if (estadoBoton == 1) {
+        Girar_ServoRampa();
         apagaBoton();
         etapa = 1;
         estadoBoton = 0;
@@ -53,6 +69,7 @@ void loop() {
  if (estadoBoton2 == 1) {
         etapa = 0;
         estadoBoton2 = 0;
+        Regresar_ServoRampa();
         Contador_Monedas--;
       }
   }
@@ -65,6 +82,16 @@ void Selector_Monedas_Interrupt() {
   if (Lectura_Pin_Moneda == 1){
     Contador_Monedas++;
   }
+}
+
+void Girar_ServoRampa()
+{
+  ServoRampa.write(70);
+}
+
+void Regresar_ServoRampa()
+{
+  ServoRampa.write(0);
 }
 
 void Leer_Boton () {
